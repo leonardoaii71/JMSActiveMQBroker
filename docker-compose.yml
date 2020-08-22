@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  broker:
+    image: leonardoaii71/jms-broker
+    networks:
+      - web
+    environment:
+      - SERVER_PORT=8000
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    restart: "no"
+
+  producer:
+    image: leonardoaii71/jms-client:latest
+    networks:
+      - web
+    environment:
+      - SERVER_PORT=8001
+    depends_on:
+      - broker
+
+  producer2:
+    image: leonardoaii71/jms-client:latest
+    networks:
+      - web
+    environment:
+      - SERVER_PORT=8002
+      - sensorID=2
+    depends_on:
+      - broker
+
+  frontend:
+    image: leonardoaii71/blackdashboardmaster:latest
+    ports:
+      - 8080:80
+    networks:
+      - web
+
+networks:
+  web:
